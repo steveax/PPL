@@ -3,8 +3,11 @@
 
 
 (defn possible-combos [d1-list d2-list]
-  "Given two lists, create their"
-  "the cartesian product admittedly can fuck the state space"
+  "Given two lists, create a list of tuples possible turns
+   in the form (sum-die likelihood) the cartesian product is admittedly
+   terrible for the state space
+  (many possibilities need to be represented without being inferred)
+  but works nicely for real-world-sided die"
   (let [all-turns (combo/cartesian-product d1-list d2-list)]
     (map #(list
             (+ (first (first %)) (first (second %)))
