@@ -21,7 +21,7 @@
   finds the probability of rolling that number as the operation of
   the two die"
   
-  "Operation is usually = < > but you can use whatever..."
+  "Operation is a binary numeral operator like = < >"
   
   (let [ d1-list (map #(list %  (/ 1 d1)) (range 1 (inc d1)))
         d2-list (map #(list % (/ 1 d2)) (range 1 (inc d2)))
@@ -30,14 +30,6 @@
       (count (filter #(operator number (first %)) all-possible))
       (count all-possible))))
 
-(defn production-likelihood [d1 number]
-  (let [ d1-list (map #(list %  (/ 1 d1)) (range 1 (inc d1)))]
-    (->>
-      (filter #(= number (first %)) d1-list)
-      first
-      second)))
-
-
 
 ;; Assume we have just d6 d8 d12 and d20
 ;;                    Usage
@@ -45,7 +37,8 @@
 (defn die-predict [sum-num]
   (let [
         possibility-map
-          {:d6-d6 (die-sums 6 6 sum-num =)
+          {
+           :d6-d6 (die-sums 6 6 sum-num =)
            :d6-d8 (die-sums 6 8 sum-num =)
            :d6-d12 (die-sums 6 12 sum-num =)
            :d6-d20 (die-sums 5 20 sum-num =)
@@ -55,10 +48,11 @@
            :d8-d20 (die-sums 8 20 sum-num =)
            
            
-           :d12-d12 (die-sums 12 12 sum-num =)
            :d12-d20 (die-sums 12 20 sum-num =)
-           
-           :d20-d20 (die-sums 20 20 sum-num =)}
+                      :d12-d12 (die-sums 12 12 sum-num =)
+
+           :d20-d20 (die-sums 20 20 sum-num =)
+           }
            ]
             
             possibility-map ))
