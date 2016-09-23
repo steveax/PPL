@@ -1,12 +1,6 @@
 (ns die.core
   (:require 
-    [anglican.stat :as s]
-    [clojure.math.combinatorics :as combo])
-  (:use clojure.repl
-        [anglican core runtime emit 
-         [state :only [get-predicts]]
-         [inference :only [collect-by]]]
-        [clojure.string :only (join split blank?)]))
+    [clojure.math.combinatorics :as combo])]))
 
 
 (defn possible-combos [d1-list d2-list]
