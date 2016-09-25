@@ -166,6 +166,24 @@
     
     possibility-map))
 
+(defn multx [x]
+  #(* x %))
+
+(defn double-list-mult [mult]
+;; map me over a list of lists to multiply all members by mult
+    (map #(* % mult) ))
+
+(defn closest? [l c r pivot]
+  (let [turns (+ l c r)
+        possabilities (die-probabilities l c r pivot)
+        dice-keys (keys possabilities)
+        dice-vals (vals possabilities)
+        updated-vals (map #(map (multx turns) %) dice-vals)
+        updated-possabilities (apply hash-map (interleave dice-keys updated-vals)) 
+        ]
+    updated-possabilities
+    ))
+
 
 
 (defn -main []
