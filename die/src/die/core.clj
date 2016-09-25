@@ -140,7 +140,7 @@
       (* (Math/pow (die-sums d1 d2 pivot >) r)) )))
 
 
-(defn gambling-simulation [l c r pivot]
+(defn die-probabilities [l c r pivot]
   (let 
     [
      possibility-map
