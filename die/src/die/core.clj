@@ -2,6 +2,9 @@
   (:require 
     [clojure.math.combinatorics :as combo]))
 
+(defn sided-die [faces]
+  (rand-int faces))
+
 
 (defn possible-combos [d1-list d2-list]
   "Given two lists, create a list of tuples possible turns
@@ -15,7 +18,6 @@
             (* (second (first %)) (second (second %))))
          all-turns)))
 
-
 (defn die-sums [d1 d2 number operator]
   "Given a number of faces of die 1 and die 2 and a number
   finds the probability of rolling that number as the operation of
@@ -27,20 +29,20 @@
         d2-list (map #(list % (/ 1 d2)) (range 1 (inc d2)))
         all-possible  (possible-combos d1-list d2-list)] 
     (/ 
-      (count (filter #(operator number (first %)) all-possible))
+      (count (filter #(operator (first %)  number) all-possible))
       (count all-possible))))
 
 
 
 
 (defn choose [n k]
-    (if (or (= n k) (= k 0))
-        1
-        (if (< n k)
-            0
-            (+ 
-                (choose (dec n) k)
-                (choose (dec n) (dec k))))))
+  (if (or (= n k) (= k 0))
+    1
+    (if (< n k)
+      0
+      (+ 
+        (choose (dec n) k)
+        (choose (dec n) (dec k))))))
 
 
 (defn problem-n [d1 d2 pivot sheet-placement total-turns num-in]
@@ -49,19 +51,20 @@
   "Choose a pivot number and make 'left' center' and 'right' columns on a sheet"
   
   "If the sum of the die faces is less than the pivot, put a tick in the left
-column, if it's equal put it in the center, and greater than in the right"
-
-"What is the probability of getting exactly num-in
-ticks in column sheet-placement = "left" | "center" | "right" after total-turns"
- 
+  column, if it's equal put it in the center, and greater than in the right"
+  
+  "What is the probability of getting exactly num-in ticks
+  in column sheet-placement = 'left' | 'center' | 'right' 
+  after total-turns"
+  
   (let 
     [ prob-in (cond
-                 (= sheet-placement "left")
-                 (die-sums d1 d2 pivot <)
-                 (= sheet-placement "center")
-                 (die-sums d1 d2 pivot =)
-                 (= sheet-placement "right")
-                 (die-sums d1 d2 pivot >))
+                (= sheet-placement "left")
+                (die-sums d1 d2 pivot <)
+                (= sheet-placement "center")
+                (die-sums d1 d2 pivot =)
+                (= sheet-placement "right")
+                (die-sums d1 d2 pivot >))
      
      prob-out (- 1 prob-in)
      num-out  (- total-turns num-in)
@@ -70,15 +73,40 @@ ticks in column sheet-placement = "left" | "center" | "right" after total-turns"
      prob-rest-out (Math/pow prob-out num-out)
      
      ]    
-   (*
-     ways-of-winning
-     prob-n-in
-     prob-rest-out)))
-     
+    (*
+      ways-of-winning
+      prob-n-in
+      prob-rest-out)))
+
+
+;; Not sure if this is totally works yet
+(defn tally-sheet [d1 d2 pivot l r c]
+  "Roll a d1 faced and d2 faced die and choose a pivot number"
+  "What is the probability of getting exactly l c r ticks in their
+  respective cols?"
+  
+  (let 
+    [ 
+    turns (+ l c r)
+    prob-l-in-left (Math/pow (die-sums d1 d2 pivot <) l)
+    prob-c-in-center (Math/pow (die-sums d1 d2 pivot =) c)
+    prob-r-in-right (Math/pow (die-sums d1 d2 pivot >) r)
+    ways-of-placement (* (choose turns l)  (choose turns c) (choose turns r))]
+    
+    (* 
+      prob-l-in-left
+      prob-r-in-right
+      prob-c-in-center
+      ways-of-placement)))
+    
+
+
 ;; Assume we have just d6 d8 d12 and d20
-;;                    Usage
+;;                  REPL  Usage
 ;; (key (apply max-key val (die-predict sum-of-die-faces)))
-(defn die-predict [sum-num]
+(defn prediction-map [sum-num]
+  "Given a number, find the probability of any two die combinations
+  having given that possibility.  All keys in the form :dsmaller-dlarger"
   (let [
         possibility-map
         {
@@ -97,13 +125,22 @@ ticks in column sheet-placement = "left" | "center" | "right" after total-turns"
          
          :d20-d20 (die-sums 20 20 sum-num =)
          }
-        ]
-    
-    possibility-map ))
+        
 
+        ]
+    possibility-map))
+    
+    
 
 
 
 (defn -main []
   (println "Load in the REPL"))
+
+
+
+
+
+
+
 
