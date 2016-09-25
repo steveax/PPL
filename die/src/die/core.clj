@@ -87,18 +87,18 @@
   
   (let 
     [ 
-    turns (+ l c r)
-    prob-l-in-left (Math/pow (die-sums d1 d2 pivot <) l)
-    prob-c-in-center (Math/pow (die-sums d1 d2 pivot =) c)
-    prob-r-in-right (Math/pow (die-sums d1 d2 pivot >) r)
-    ways-of-placement (* (choose turns l)  (choose turns c) (choose turns r))]
+     turns (+ l c r)
+     prob-l-in-left (Math/pow (die-sums d1 d2 pivot <) l)
+     prob-c-in-center (Math/pow (die-sums d1 d2 pivot =) c)
+     prob-r-in-right (Math/pow (die-sums d1 d2 pivot >) r)
+     ways-of-placement (* (choose turns l)  (choose turns c) (choose turns r))]
     
     (* 
       prob-l-in-left
       prob-r-in-right
       prob-c-in-center
       ways-of-placement)))
-    
+
 
 
 ;; Assume we have just d6 d8 d12 and d20
@@ -126,11 +126,45 @@
          :d20-d20 (die-sums 20 20 sum-num =)
          }
         
-
+        
         ]
     possibility-map))
+
+
+
+(defn prob-triple [l c r pivot d1 d2]
+  (let [turns (+ l c r)]
+    (list 
+      (* (Math/pow (die-sums d1 d2 pivot <) l))
+      (* (Math/pow (die-sums d1 d2 pivot =) c))
+      (* (Math/pow (die-sums d1 d2 pivot >) r)) )))
+
+
+(defn gambling-simulation [l c r pivot]
+  (let 
+    [
+     possibility-map
+     {
+      :d6-d6 (prob-triple l c r pivot 6 6)
+      
+      :d6-d8 (prob-triple l c r pivot 6 8)
+      :d6-d12 (prob-triple l c r pivot 6 12)
+      :d6-d20 (prob-triple l c r pivot 6 20)
+      
+      :d8-d8 (prob-triple l c r pivot 8 8)
+      :d8-d12 (prob-triple l c r pivot 8 12)
+      :d8-d20 (prob-triple l c r pivot 8 20)
+      
+      
+      :d12-d12 (prob-triple l c r pivot 12 12)
+      :d12-d20 (prob-triple l c r pivot 12 20)
+      
+      :d20-d20 (prob-triple l c r pivot 20 20)
+      }]
     
     
+    
+    possibility-map))
 
 
 
