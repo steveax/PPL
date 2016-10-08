@@ -1,7 +1,6 @@
 (ns die.core
   (:require 
-    [clojure.math.combinatorics :as combo]
-    [markov.core :refer :all]))
+    [clojure.math.combinatorics :as combo]))
 
 (defn uniform [number]
   "Good for testing / def-ing in the REPL"
