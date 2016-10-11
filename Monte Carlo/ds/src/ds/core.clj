@@ -1,10 +1,10 @@
 (ns ds.core
-(:use clojure.set)
+  (:use clojure.set)
   (:require 
     (incanter [core :refer :all]
-                      [stats :refer :all]
-                      [charts :refer :all]
-                      )))
+              [stats :refer :all]
+              [charts :refer :all]
+              )))
 
 
 (defn cartesian-product
@@ -119,76 +119,80 @@
         possibility-map (dissoc possibility-map (key guess2))
         guess3 (apply max-key val possibility-map)]
     
-   (map first (list guess1 guess2 guess3))))
+    (map first (list guess1 guess2 guess3))))
 
 
 (defn key-word [n1 n2]
   "smaller goes first"
-   (cond 
+  (cond 
     (= n1 n2) (keyword (str "d"n1"-d"n2))
     (> n1 n2) (keyword (str "d"n2"-d"n1))
     (< n1 n2) (keyword (str "d"n1"-d"n2))))
 
 
 (defn generate-sheet [pivot num-throws]
- (fn [die-pair]
- 
-  (let[d1 (first die-pair)
-       d2 (second die-pair)
-       d1-throws (sample (range 1 (inc d1)) :size num-throws)
-       d2-throws (sample (range 1 (inc d2)) :size num-throws)
-        sums (map + d1-throws d2-throws)
-       l (count (filter #(< % pivot) sums))
-      c (count (filter #(= % pivot) sums))
-      r (count (filter #(> % pivot) sums))
-       ]
-    (list l c r)
+  (fn [die-pair]
     
-    )))
+    (let[d1 (first die-pair)
+         d2 (second die-pair)
+         d1-throws (sample (range 1 (inc d1)) :size num-throws)
+         d2-throws (sample (range 1 (inc d2)) :size num-throws)
+         sums (map + d1-throws d2-throws)
+         l (count (filter #(< % pivot) sums))
+         c (count (filter #(= % pivot) sums))
+         r (count (filter #(> % pivot) sums))
+         ]
+      (list l c r)
+      
+      )))
 
 (defn game-outcome [game-tuple]
   (let [die-pair (apply key-word (first game-tuple))
         tally-sheet (second game-tuple)
         guesses (guesses tally-sheet) ; hard codes pivot / die opts right now
         ]
-  (cond 
+    (cond 
       (= die-pair (first guesses)) "win1"
       (= die-pair (second guesses)) "win2"
       (= die-pair (nth guesses 2)) "win3"
       :else "lose")
-  ))
+    ))
 
 
 (defn choose-die [] (sample [6 8 12 20] :size 2))
 
-(defn simulate-game [num-games]
-  (let [  
-          num-throws 30
-          pivot 16
-          die-choices (take num-games (repeatedly choose-die))
-          tally-maker (generate-sheet pivot num-throws)
-          games-with-die (map #(list % (tally-maker %)) die-choices)
-       game-outcomes (map game-outcome games-with-die)
-       win1 (count (filter #(= "win1" %) game-outcomes))
-       win2 (count (filter #(= "win2" %) game-outcomes))
-       win3 (count (filter #(= "win3" %) game-outcomes))
-       lose (count (filter #(= "lose" %) game-outcomes))
+(defn simulate-game [num-games num-throws pivot]
+  (let [  die-choices (take num-games (repeatedly choose-die))
+        tally-maker (generate-sheet pivot num-throws)
+        games-with-die (map #(list % (tally-maker %)) die-choices)
+        game-outcomes (map game-outcome games-with-die)
+        win1 (count (filter #(= "win1" %) game-outcomes))
+        win2 (count (filter #(= "win2" %) game-outcomes))
+        win3 (count (filter #(= "win3" %) game-outcomes))
+        lose (count (filter #(= "lose" %) game-outcomes))
         ]
-
-(view (pie-chart ["Firsts" "Seconds" "Thirds" "Losses"] 
-                 [(/ win1 num-games)
-                   (/ win2 num-games)
-                   (/ win3 num-games)
-                   (/ lose num-games)]))))
+    (do 
+      (println (str  "Chance of winning first "(/ win1 num-games)))
+      (println (str  "Chance of winning second "(/ win2 num-games)))
+      (println (str  "Chance of winning third " (/ win3 num-games)))
+      (println (str  "Chance of winning losing round " (/ lose num-games)))
+    
+    
+    
+    (view (pie-chart ["Firsts" "Seconds" "Thirds" "Losses"] 
+                     [(/ win1 num-games)
+                      (/ win2 num-games)
+                      (/ win3 num-games)
+                      (/ lose num-games)])))))
 
 
 
 (defn parse-int [s]
-   (Integer. (re-find  #"\d+" s )))
+  (Integer. (re-find  #"\d+" s )))
 
 (defn -main
   " 'Lein run x' will run a simulation with 30 throw games a pivot of 16
   and do an x game simulation.  This produces a pie chart that could be used
   to determine tradeoffs"
-  [num-games]
-  (simulate-game (parse-int num-games)))
+  [num-games num-throws pivot]
+  (simulate-game (parse-int num-games) (parse-int num-throws) (parse-int pivot)))
