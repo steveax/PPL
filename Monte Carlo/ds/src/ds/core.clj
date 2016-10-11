@@ -191,8 +191,5 @@
   (Integer. (re-find  #"\d+" s )))
 
 (defn -main
-  " 'Lein run x' will run a simulation with 30 throw games a pivot of 16
-  and do an x game simulation.  This produces a pie chart that could be used
-  to determine tradeoffs"
   [num-games num-throws pivot]
   (simulate-game (parse-int num-games) (parse-int num-throws) (parse-int pivot)))
