@@ -170,12 +170,17 @@
         win2 (count (filter #(= "win2" %) game-outcomes))
         win3 (count (filter #(= "win3" %) game-outcomes))
         lose (count (filter #(= "lose" %) game-outcomes))
+        round-percent (fn [fract] (format "%.2f" (* 100 (float fract))))
         ]
     (do 
-      (println (str  "Chance of winning first "(/ win1 num-games)))
-      (println (str  "Chance of winning second "(/ win2 num-games)))
-      (println (str  "Chance of winning third " (/ win3 num-games)))
-      (println (str  "Chance of winning losing round " (/ lose num-games)))
+      (println (str  "Chance of winning first " (/ win1 num-games)
+                    (str " or " (round-percent(/ win1 num-games)) " percent"  )))
+      (println (str  "Chance of winning second " (/ win2 num-games) " percent"
+                    (str " or " (round-percent (/ win2 num-games)) " percent"  )))
+      (println (str  "Chance of winning third "  (/ win3 num-games)
+                    (str " or "  (round-percent(/ win3 num-games )) " percent"  )))
+      (println (str  "Chance of winning losing round " (/ lose num-games)
+                    (str " or " (round-percent (/ lose num-games))  " percent" )))
     
     
     
