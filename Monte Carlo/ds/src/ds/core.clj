@@ -87,7 +87,7 @@
       
       )))
 
-(defn guesses [tally-sheet]; they're not random. they're calculated  ;(sample [1 2 3] :size n))
+(defn guesses [tally-sheet]
   (let [ place #(cond
                   (= "l" %)  (first tally-sheet)
                   (= "c" %)  (second tally-sheet)
