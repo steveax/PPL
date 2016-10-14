@@ -87,13 +87,13 @@
       
       )))
 
-(defn guesses [tally-sheet]
+(defn guesses [tally-sheet pivot]
   (let [ place #(cond
                   (= "l" %)  (first tally-sheet)
                   (= "c" %)  (second tally-sheet)
                   (= "r" %)  (nth tally-sheet 2))
         total (reduce + tally-sheet)
-        pivot 16
+       
         possibility-map
         {
          
@@ -146,17 +146,18 @@
       
       )))
 
-(defn game-outcome [game-tuple]
+(defn game-outcome [pivot]
+  (fn [game-tuple]
   (let [die-pair (apply key-word (first game-tuple))
         tally-sheet (second game-tuple)
-        guesses (guesses tally-sheet) ; hard codes pivot / die opts right now
+        guess-list (guesses tally-sheet pivot) ; hard codes pivot / die opts right now
         ]
     (cond 
-      (= die-pair (first guesses)) "win1"
-      (= die-pair (second guesses)) "win2"
-      (= die-pair (nth guesses 2)) "win3"
+      (= die-pair (first guess-list)) "win1"
+      (= die-pair (second guess-list)) "win2"
+      (= die-pair (nth guess-list 2)) "win3"
       :else "lose")
-    ))
+    )))
 
 
 (defn choose-die [] (sample [6 8 12 20] :size 2))
@@ -165,7 +166,7 @@
   (let [  die-choices (take num-games (repeatedly choose-die))
         tally-maker (generate-sheet pivot num-throws)
         games-with-die (map #(list % (tally-maker %)) die-choices)
-        game-outcomes (map game-outcome games-with-die)
+        game-outcomes (map #((game-outcome pivot) %) games-with-die)
         win1 (count (filter #(= "win1" %) game-outcomes))
         win2 (count (filter #(= "win2" %) game-outcomes))
         win3 (count (filter #(= "win3" %) game-outcomes))
