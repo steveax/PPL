@@ -29,13 +29,21 @@
     likelihood-list))
 
 
-
 (defn problem-f []
-  (let [likelihood-list (generalized 6 3 "nc")
-        adjusted-likelihoods (map #(* (/ 1 6) %) likelihood-list) ]
+  (let [likelihoods (generalized 6 3 "nc")
+        adjusted-likelihoods (map #(* (/ 1 6) %) likelihoods) ]
     (reduce + adjusted-likelihoods)))
 
+(defn problem-g []
+  (let [likelihoods (map #(generalized 6 % "nc") (range 3 7))
+        adjustor (fn [likelihood-lists] (map #(* (/ 1 6) %) likelihood-lists))
+        adjusted-likelihoods (map adjustor likelihoods)]
+    (reduce + (map #(reduce + %) adjusted-likelihoods))))
 
+(defn problem-h []
+  (let [likelihoods (generalized 6 3 "c")
+        adjusted-likelihoods (map #(* (/ 1 6) %) likelihoods) ]
+    (reduce + adjusted-likelihoods)))
 
 
 (defn -main
