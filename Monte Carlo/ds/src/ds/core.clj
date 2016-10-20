@@ -83,9 +83,7 @@
     (*
       ways-of-winning
       prob-n-in
-      prob-rest-out
-      
-      )))
+      prob-rest-out)))
 
 (defn guesses [tally-sheet pivot]
   (let [ place #(cond
@@ -150,14 +148,12 @@
   (fn [game-tuple]
   (let [die-pair (apply key-word (first game-tuple))
         tally-sheet (second game-tuple)
-        guess-list (guesses tally-sheet pivot) ; hard codes pivot / die opts right now
-        ]
+        guess-list (guesses tally-sheet pivot)] ; hard codes pivot / die opts right now
     (cond 
       (= die-pair (first guess-list)) "win1"
       (= die-pair (second guess-list)) "win2"
       (= die-pair (nth guess-list 2)) "win3"
-      :else "lose")
-    )))
+      :else "lose"))))
 
 
 (defn choose-die [] (sample [6 8 12 20] :size 2))
