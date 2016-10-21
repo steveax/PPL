@@ -64,7 +64,7 @@
   after total-turns"
   
   (let 
-    [ prob-in (cond
+    [prob-in (cond
                 (= sheet-placement "l")
                 (die-sums d1 d2 pivot <)
                 (= sheet-placement "c")
@@ -90,9 +90,7 @@
         total (reduce + tally-sheet)
        
         possibility-map
-        {
-         
-         :d6-d6 (->> (map #(problem-n 6 6 pivot % total (place %) ) (list "l" "c" "r")) (reduce +))
+        {:d6-d6 (->> (map #(problem-n 6 6 pivot % total (place %) ) (list "l" "c" "r")) (reduce +))
          :d6-d8 (->> (map #(problem-n 6 8 pivot % total (place %) ) (list "l" "c" "r")) (reduce +))
          :d6-d12 (->> (map #(problem-n 6 12 pivot % total (place %) ) (list "l" "c" "r")) (reduce +))
          :d6-d20 (->> (map #(problem-n 6 20 pivot % total (place %) ) (list "l" "c" "r")) (reduce +))
@@ -105,8 +103,7 @@
          :d12-d12 (->> (map #(problem-n 12 12 pivot % total (place %) ) (list "l" "c" "r")) (reduce +))
          :d12-d20 (->> (map #(problem-n 12 20 pivot % total (place %) ) (list "l" "c" "r")) (reduce +))
          
-         :d20-d20 (->> (map #(problem-n 20 20 pivot % total (place %) ) (list "l" "c" "r")) (reduce +))
-         }
+         :d20-d20 (->> (map #(problem-n 20 20 pivot % total (place %) ) (list "l" "c" "r")) (reduce +))}
         
         guess1 (apply max-key val possibility-map)
         possibility-map (dissoc possibility-map (key guess1)) 
@@ -127,7 +124,6 @@
 
 (defn generate-sheet [pivot num-throws]
   (fn [die-pair]
-    
     (let[d1 (first die-pair)
          d2 (second die-pair)
          d1-throws (sample (range 1 (inc d1)) :size num-throws)
@@ -135,8 +131,7 @@
          sums (map + d1-throws d2-throws)
          l (count (filter #(< % pivot) sums))
          c (count (filter #(= % pivot) sums))
-         r (count (filter #(> % pivot) sums))
-         ]
+         r (count (filter #(> % pivot) sums))]
       (list l c r))))
 
 (defn game-outcome [pivot]
@@ -154,7 +149,7 @@
 (defn choose-die [] (sample [6 8 12 20] :size 2))
 
 (defn simulate-game [num-games num-throws pivot]
-  (let [  die-choices (take num-games (repeatedly choose-die))
+  (let [die-choices (take num-games (repeatedly choose-die))
         tally-maker (generate-sheet pivot num-throws)
         games-with-die (map #(list % (tally-maker %)) die-choices)
         game-outcomes (map #((game-outcome pivot) %) games-with-die)
