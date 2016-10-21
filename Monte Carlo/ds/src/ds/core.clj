@@ -3,8 +3,7 @@
   (:require 
     (incanter [core :refer :all]
               [stats :refer :all]
-              [charts :refer :all]
-              )))
+              [charts :refer :all])))
 
 
 (defn cartesian-product
@@ -77,9 +76,7 @@
      num-out  (- total-turns num-in)
      ways-of-winning (choose total-turns num-in)
      prob-n-in (Math/pow prob-in num-in)
-     prob-rest-out (Math/pow prob-out num-out)
-     
-     ]    
+     prob-rest-out (Math/pow prob-out num-out)]    
     (*
       ways-of-winning
       prob-n-in
@@ -140,9 +137,7 @@
          c (count (filter #(= % pivot) sums))
          r (count (filter #(> % pivot) sums))
          ]
-      (list l c r)
-      
-      )))
+      (list l c r))))
 
 (defn game-outcome [pivot]
   (fn [game-tuple]
@@ -167,8 +162,7 @@
         win2 (count (filter #(= "win2" %) game-outcomes))
         win3 (count (filter #(= "win3" %) game-outcomes))
         lose (count (filter #(= "lose" %) game-outcomes))
-        round-percent (fn [fract] (format "%.2f" (* 100 (float fract))))
-        ]
+        round-percent (fn [fract] (format "%.2f" (* 100 (float fract))))]
     (do 
       (println (str  "Chance of winning first " (/ win1 num-games)
                     (str " or " (round-percent(/ win1 num-games)) " percent"  )))
@@ -176,7 +170,7 @@
                     (str " or " (round-percent (/ win2 num-games)) " percent"  )))
       (println (str  "Chance of winning third "  (/ win3 num-games)
                     (str " or "  (round-percent(/ win3 num-games )) " percent"  )))
-      (println (str  "Chance of winning losing round " (/ lose num-games)
+      (println (str  "Chance of losing round " (/ lose num-games)
                     (str " or " (round-percent (/ lose num-games))  " percent" )))
     
     
