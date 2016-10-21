@@ -90,20 +90,20 @@
         total (reduce + tally-sheet)
        
         possibility-map
-        {:d6-d6 (->> (map #(problem-n 6 6 pivot % total (place %) ) (list "l" "c" "r")) (reduce +))
-         :d6-d8 (->> (map #(problem-n 6 8 pivot % total (place %) ) (list "l" "c" "r")) (reduce +))
-         :d6-d12 (->> (map #(problem-n 6 12 pivot % total (place %) ) (list "l" "c" "r")) (reduce +))
-         :d6-d20 (->> (map #(problem-n 6 20 pivot % total (place %) ) (list "l" "c" "r")) (reduce +))
+        {:d6-d6 (->> (map #(problem-n 6 6 pivot % total (place %)) (list "l" "c" "r")) (reduce +))
+         :d6-d8 (->> (map #(problem-n 6 8 pivot % total (place %)) (list "l" "c" "r")) (reduce +))
+         :d6-d12 (->> (map #(problem-n 6 12 pivot % total (place %)) (list "l" "c" "r")) (reduce +))
+         :d6-d20 (->> (map #(problem-n 6 20 pivot % total (place %)) (list "l" "c" "r")) (reduce +))
          
-         :d8-d8 (->> (map #(problem-n 8 8 pivot % total (place %) ) (list "l" "c" "r")) (reduce +))
-         :d8-d12 (->> (map #(problem-n 8 12 pivot % total (place %) ) (list "l" "c" "r")) (reduce +))
-         :d8-d20  (->> (map #(problem-n 8 20 pivot % total (place %) ) (list "l" "c" "r")) (reduce +))
+         :d8-d8 (->> (map #(problem-n 8 8 pivot % total (place %)) (list "l" "c" "r")) (reduce +))
+         :d8-d12 (->> (map #(problem-n 8 12 pivot % total (place %)) (list "l" "c" "r")) (reduce +))
+         :d8-d20  (->> (map #(problem-n 8 20 pivot % total (place %)) (list "l" "c" "r")) (reduce +))
          
          
-         :d12-d12 (->> (map #(problem-n 12 12 pivot % total (place %) ) (list "l" "c" "r")) (reduce +))
-         :d12-d20 (->> (map #(problem-n 12 20 pivot % total (place %) ) (list "l" "c" "r")) (reduce +))
+         :d12-d12 (->> (map #(problem-n 12 12 pivot % total (place %)) (list "l" "c" "r")) (reduce +))
+         :d12-d20 (->> (map #(problem-n 12 20 pivot % total (place %)) (list "l" "c" "r")) (reduce +))
          
-         :d20-d20 (->> (map #(problem-n 20 20 pivot % total (place %) ) (list "l" "c" "r")) (reduce +))}
+         :d20-d20 (->> (map #(problem-n 20 20 pivot % total (place %)) (list "l" "c" "r")) (reduce +))}
         
         guess1 (apply max-key val possibility-map)
         possibility-map (dissoc possibility-map (key guess1)) 
